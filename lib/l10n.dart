@@ -6,7 +6,7 @@ import 'store.dart';
 /// All user-visible strings: key -> [English, French].
 const Map<String, List<String>> _strings = {
   // General
-  'app.title': ['MediCore HMS', 'MediCore HMS'],
+  'app.title': ['FOUKA Medix', 'FOUKA Medix'],
   'cancel': ['Cancel', 'Annuler'],
   'save': ['Save', 'Enregistrer'],
   'back': ['Back', 'Retour'],
@@ -34,8 +34,8 @@ const Map<String, List<String>> _strings = {
     'E-mail ou mot de passe incorrect.',
   ],
   'login.demo': [
-    'Demo account: admin@medicore.app / admin123',
-    'Compte de démonstration : admin@medicore.app / admin123',
+    'Demo account: admin@foukamedix.app / admin123',
+    'Compte de démonstration : admin@foukamedix.app / admin123',
   ],
   'register.title': ['Register User', 'Inscription'],
   'register.button': ['Register', "S'inscrire"],
@@ -48,10 +48,7 @@ const Map<String, List<String>> _strings = {
     'Passwords do not match.',
     'Les mots de passe ne correspondent pas.',
   ],
-  'register.short': [
-    'At least 6 characters.',
-    'Au moins 6 caractères.',
-  ],
+  'register.short': ['At least 6 characters.', 'Au moins 6 caractères.'],
   'register.done': [
     'Account created. You can now log in.',
     'Compte créé. Vous pouvez vous connecter.',
@@ -66,7 +63,7 @@ const Map<String, List<String>> _strings = {
   'role.assistant': ['Medical assistant', 'Assistant médical'],
 
   // Dashboard
-  'dash.title': ['MediCore HMS Dashboard', 'Tableau de bord MediCore HMS'],
+  'dash.title': ['FOUKA Medix Dashboard', 'Tableau de bord FOUKA Medix'],
   'dash.subtitle': [
     'Manage patients, admissions, and medical records.',
     'Gérez les patients, les admissions et les dossiers médicaux.',
@@ -126,7 +123,10 @@ const Map<String, List<String>> _strings = {
   'weight': ['Weight (kg)', 'Poids (kg)'],
   'bloodPressure': ['Blood Pressure', 'Tension artérielle'],
   'heartRate': ['Heart Rate (bpm)', 'Fréquence cardiaque (bpm)'],
-  'upload': ['Upload Files (PDF / Images)', 'Ajouter des fichiers (PDF / Images)'],
+  'upload': [
+    'Upload Files (PDF / Images)',
+    'Ajouter des fichiers (PDF / Images)',
+  ],
   'noFiles': ['No document.', 'Aucun document.'],
   'patient.saved': ['Patient record saved.', 'Dossier patient enregistré.'],
 
@@ -150,7 +150,10 @@ const Map<String, List<String>> _strings = {
     'Only doctors can write medical reports.',
     'Seuls les médecins peuvent rédiger des comptes rendus.',
   ],
-  'denied': ['Access denied for your role.', 'Accès refusé pour votre fonction.'],
+  'denied': [
+    'Access denied for your role.',
+    'Accès refusé pour votre fonction.',
+  ],
 
   // Appointments
   'appt.title': ['Appointments', 'Rendez-vous'],
@@ -194,7 +197,10 @@ const Map<String, List<String>> _strings = {
     'Copiez le texte de sauvegarde et conservez-le en lieu sûr. Collez-le ci-dessous pour restaurer les données sur un appareil.',
   ],
   'backup.copy': ['Copy backup', 'Copier la sauvegarde'],
-  'backup.copied': ['Backup copied to clipboard.', 'Sauvegarde copiée dans le presse-papiers.'],
+  'backup.copied': [
+    'Backup copied to clipboard.',
+    'Sauvegarde copiée dans le presse-papiers.',
+  ],
   'backup.paste': ['Paste a backup here', 'Collez une sauvegarde ici'],
   'backup.restore': ['Restore', 'Restaurer'],
   'backup.restoreAsk': [
@@ -235,7 +241,14 @@ const Map<String, List<String>> _strings = {
 
 const genders = ['Male', 'Female'];
 const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
-const allergyOptions = ['Penicillin', 'Dust', 'Pollen', 'Seafood', 'Peanuts', 'None'];
+const allergyOptions = [
+  'Penicillin',
+  'Dust',
+  'Pollen',
+  'Seafood',
+  'Peanuts',
+  'None',
+];
 const chronicOptions = [
   'Diabetes',
   'Hypertension',
@@ -296,6 +309,7 @@ class LangButton extends StatelessWidget {
       padding: const EdgeInsets.only(right: 8),
       child: TextButton.icon(
         key: const Key('langButton'),
+        style: TextButton.styleFrom(foregroundColor: Colors.white),
         onPressed: () => store.setLang(fr ? 'en' : 'fr'),
         icon: const Icon(Icons.language),
         label: Text(fr ? 'English' : 'Français'),

@@ -19,8 +19,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _login() {
     if (store.login(_email.text, _password.text)) {
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (_) => const DashboardScreen()));
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const DashboardScreen()),
+      );
     } else {
       setState(() => _error = 'login.error');
     }
@@ -35,12 +37,13 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
       body: PageBody(
         children: [
-          Icon(Icons.local_hospital,
-              size: 64, color: Theme.of(context).colorScheme.primary),
+          const CrescentLogo(),
           const SizedBox(height: 8),
-          Text('MediCore HMS',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headlineSmall),
+          Text(
+            'FOUKA Medix',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
           const SizedBox(height: 24),
           TextField(
             key: const Key('email'),
@@ -59,8 +62,10 @@ class _LoginScreenState extends State<LoginScreen> {
           if (_error != null)
             Padding(
               padding: const EdgeInsets.only(top: 10),
-              child: Text(context.tr(_error!),
-                  style: TextStyle(color: Theme.of(context).colorScheme.error)),
+              child: Text(
+                context.tr(_error!),
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
+              ),
             ),
           gap,
           FilledButton(
@@ -70,18 +75,24 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           const SizedBox(height: 8),
           FilledButton(
-            onPressed: () => Navigator.push(context,
-                MaterialPageRoute(builder: (_) => const RegisterScreen())),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const RegisterScreen()),
+            ),
             child: Text(context.tr('login.register')),
           ),
           const SizedBox(height: 24),
-          Text(context.tr('login.demo'),
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodySmall),
+          Text(
+            context.tr('login.demo'),
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
           const SizedBox(height: 6),
-          Text(context.tr('offline'),
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodySmall),
+          Text(
+            context.tr('offline'),
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
         ],
       ),
     );
@@ -159,16 +170,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
             TextFormField(
               controller: _confirm,
               obscureText: true,
-              validator: (v) => v != _password.text
-                  ? context.tr('register.mismatch')
-                  : null,
-              decoration:
-                  InputDecoration(labelText: context.tr('confirmPassword')),
+              validator: (v) =>
+                  v != _password.text ? context.tr('register.mismatch') : null,
+              decoration: InputDecoration(
+                labelText: context.tr('confirmPassword'),
+              ),
             ),
             gap,
             FilledButton(
-                onPressed: _register,
-                child: Text(context.tr('register.button'))),
+              onPressed: _register,
+              child: Text(context.tr('register.button')),
+            ),
             const SizedBox(height: 8),
             FilledButton(
               onPressed: () => Navigator.pop(context),

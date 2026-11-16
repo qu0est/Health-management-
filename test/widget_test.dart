@@ -13,7 +13,7 @@ void main() {
   });
 
   testWidgets('language switch, login and patient search', (tester) async {
-    await tester.pumpWidget(const MediCoreApp());
+    await tester.pumpWidget(const FoukaMedixApp());
     expect(find.text('Se connecter'), findsOneWidget);
 
     // Switch French -> English.
@@ -23,7 +23,10 @@ void main() {
     expect(find.text('Create an account'), findsOneWidget);
 
     // Wrong password is rejected.
-    await tester.enterText(find.byKey(const Key('email')), 'admin@medicore.app');
+    await tester.enterText(
+      find.byKey(const Key('email')),
+      'admin@foukamedix.app',
+    );
     await tester.enterText(find.byKey(const Key('password')), 'wrong');
     await tester.tap(find.byKey(const Key('loginButton')));
     await tester.pumpAndSettle();
@@ -32,7 +35,7 @@ void main() {
     await tester.enterText(find.byKey(const Key('password')), 'admin123');
     await tester.tap(find.byKey(const Key('loginButton')));
     await tester.pumpAndSettle();
-    expect(find.text('MediCore HMS Dashboard'), findsOneWidget);
+    expect(find.text('FOUKA Medix Dashboard'), findsOneWidget);
 
     // Dashboard follows the language too.
     await tester.tap(find.byKey(const Key('langButton')));
@@ -51,7 +54,7 @@ void main() {
     expect(store.searchPatients('14/03/1988').single['firstName'], 'Amina');
     expect(store.searchPatients('', bloodType: 'O+').length, 1);
 
-    expect(store.login('assistant@medicore.app', 'assist123'), isTrue);
+    expect(store.login('assistant@foukamedix.app', 'assist123'), isTrue);
     expect(store.canWriteReports, isFalse);
     expect(store.canAdminister, isFalse);
     expect(store.audit.first['action'], 'login');

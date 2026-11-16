@@ -5,6 +5,38 @@ import 'store.dart';
 
 const gap = SizedBox(height: 14);
 
+const brandBlue = Color(0xFF0D47A1);
+const brandRed = Color(0xFFD32F2F);
+
+/// App logo: a red crescent.
+class CrescentLogo extends StatelessWidget {
+  const CrescentLogo({super.key, this.size = 72});
+  final double size;
+
+  @override
+  Widget build(BuildContext context) => Center(
+    child: CustomPaint(size: Size.square(size), painter: _CrescentPainter()),
+  );
+}
+
+class _CrescentPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final r = size.width / 2;
+    final outer = Path()
+      ..addOval(Rect.fromCircle(center: Offset(r, r), radius: r));
+    final inner = Path()
+      ..addOval(Rect.fromCircle(center: Offset(r * 1.42, r), radius: r * 0.8));
+    canvas.drawPath(
+      Path.combine(PathOperation.difference, outer, inner),
+      Paint()..color = brandRed,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
 /// Keeps content readable on tablets / wide screens.
 class PageBody extends StatelessWidget {
   const PageBody({super.key, required this.children, this.bottom});
@@ -54,10 +86,17 @@ class ButtonRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Expanded(child: FilledButton(onPressed: onLeft, child: Text(leftLabel))),
+        Expanded(
+          child: FilledButton(
+            style: FilledButton.styleFrom(backgroundColor: brandRed),
+            onPressed: onLeft,
+            child: Text(leftLabel),
+          ),
+        ),
         const SizedBox(width: 10),
         Expanded(
-            child: FilledButton(onPressed: onRight, child: Text(rightLabel))),
+          child: FilledButton(onPressed: onRight, child: Text(rightLabel)),
+        ),
       ],
     );
   }
@@ -69,9 +108,9 @@ class SectionTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.only(top: 10, bottom: 12),
-        child: Text(text, style: Theme.of(context).textTheme.titleMedium),
-      );
+    padding: const EdgeInsets.only(top: 10, bottom: 12),
+    child: Text(text, style: Theme.of(context).textTheme.titleMedium),
+  );
 }
 
 /// Dropdown whose stored values are translated for display.
@@ -102,7 +141,10 @@ class OptionDropdown extends StatelessWidget {
       decoration: InputDecoration(labelText: label),
       items: [
         if (allowAll)
-          DropdownMenuItem<String?>(value: null, child: Text(context.tr('all'))),
+          DropdownMenuItem<String?>(
+            value: null,
+            child: Text(context.tr('all')),
+          ),
         for (final o in options)
           DropdownMenuItem<String?>(
             value: o,
@@ -166,9 +208,13 @@ Future<bool> confirm(BuildContext context, String message) async {
       content: Text(message),
       actions: [
         TextButton(
-            onPressed: () => Navigator.pop(c, false), child: Text(c.tr('no'))),
+          onPressed: () => Navigator.pop(c, false),
+          child: Text(c.tr('no')),
+        ),
         FilledButton(
-            onPressed: () => Navigator.pop(c, true), child: Text(c.tr('yes'))),
+          onPressed: () => Navigator.pop(c, true),
+          child: Text(c.tr('yes')),
+        ),
       ],
     ),
   );

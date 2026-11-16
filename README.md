@@ -1,4 +1,4 @@
-# MediCore HMS
+# FOUKA Medix
 
 Application mobile simple (Flutter) de gestion des dossiers médicaux, bilingue
 **français / anglais**, qui fonctionne **sans connexion internet** : toutes les
@@ -33,9 +33,9 @@ immédiatement ; le choix est mémorisé.
 
 | E-mail | Mot de passe / Password | Fonction / Role |
 |---|---|---|
-| `admin@medicore.app` | `admin123` | Administrateur |
-| `doctor@medicore.app` | `doctor123` | Médecin |
-| `assistant@medicore.app` | `assist123` | Assistant médical |
+| `admin@foukamedix.app` | `admin123` | Administrateur |
+| `doctor@foukamedix.app` | `doctor123` | Médecin |
+| `assistant@foukamedix.app` | `assist123` | Assistant médical |
 
 Deux patients et un rendez-vous d'exemple sont créés au premier lancement.
 

@@ -51,7 +51,30 @@ class AppStore extends ChangeNotifier {
       await _save();
     } else {
       _fromJson(jsonDecode(raw) as Json);
+      _renameOldDemoAccounts();
     }
+  }
+
+  /// Earlier versions created the demo accounts under @medicore.app.
+  void _renameOldDemoAccounts() {
+    const demo = {
+      'admin': 'admin123',
+      'doctor': 'doctor123',
+      'assistant': 'assist123',
+    };
+    var changed = false;
+    for (final u in users) {
+      final old = u['email'] as String;
+      final name = old.split('@').first;
+      if (old.endsWith('@medicore.app') &&
+          demo.containsKey(name) &&
+          u['hash'] == _hash(old, demo[name]!)) {
+        u['email'] = '$name@foukamedix.app';
+        u['hash'] = _hash(u['email'], demo[name]!);
+        changed = true;
+      }
+    }
+    if (changed) _prefs?.setString(_dbKey, jsonEncode(_toJson()));
   }
 
   void setLang(String value) {
@@ -62,16 +85,17 @@ class AppStore extends ChangeNotifier {
 
   // ---- Persistence ----
   Json _toJson() => {
-        'users': users,
-        'patients': patients,
-        'appointments': appointments,
-        'audit': audit,
-        'counter': _counter,
-      };
+    'users': users,
+    'patients': patients,
+    'appointments': appointments,
+    'audit': audit,
+    'counter': _counter,
+  };
 
   void _fromJson(Json db) {
-    List<Json> list(String k) =>
-        ((db[k] ?? []) as List).map((e) => Map<String, dynamic>.from(e)).toList();
+    List<Json> list(String k) => ((db[k] ?? []) as List)
+        .map((e) => Map<String, dynamic>.from(e))
+        .toList();
     users = list('users');
     patients = list('patients');
     appointments = list('appointments');
@@ -84,8 +108,9 @@ class AppStore extends ChangeNotifier {
     notifyListeners();
   }
 
-  String _hash(String email, String password) =>
-      sha256.convert(utf8.encode('${email.toLowerCase()}:$password')).toString();
+  String _hash(String email, String password) => sha256
+      .convert(utf8.encode('${email.toLowerCase()}:$password'))
+      .toString();
 
   String _newId() => DateTime.now().microsecondsSinceEpoch.toString();
 
@@ -105,7 +130,8 @@ class AppStore extends ChangeNotifier {
   bool login(String email, String password) {
     final mail = email.trim().toLowerCase();
     final match = users.where(
-        (u) => u['email'] == mail && u['hash'] == _hash(mail, password));
+      (u) => u['email'] == mail && u['hash'] == _hash(mail, password),
+    );
     if (match.isEmpty) return false;
     currentUser = match.first;
     _log('login');
@@ -189,10 +215,16 @@ class AppStore extends ChangeNotifier {
 
   /// Search by last name, first name, record number or birth date,
   /// combined with optional filters.
-  List<Json> searchPatients(String query,
-      {String? bloodType, String? department, String? status}) {
-    final tokens =
-        query.toLowerCase().split(RegExp(r'\s+')).where((t) => t.isNotEmpty);
+  List<Json> searchPatients(
+    String query, {
+    String? bloodType,
+    String? department,
+    String? status,
+  }) {
+    final tokens = query
+        .toLowerCase()
+        .split(RegExp(r'\s+'))
+        .where((t) => t.isNotEmpty);
     return patients.where((p) {
       if (bloodType != null && p['bloodType'] != bloodType) return false;
       if (department != null && p['department'] != department) return false;
@@ -219,7 +251,9 @@ class AppStore extends ChangeNotifier {
 
   String _apptDetail(Json a) {
     final p = patientById(a['patientId']);
-    final when = (a['dateTime'] as String).substring(0, 16).replaceFirst('T', ' ');
+    final when = (a['dateTime'] as String)
+        .substring(0, 16)
+        .replaceFirst('T', ' ');
     return '${p == null ? '' : patientName(p)} — $when';
   }
 
@@ -265,12 +299,16 @@ class AppStore extends ChangeNotifier {
 
   // ---- Demo data ----
   void _seed() {
-    Json user(String name, String mail, String pw, String role) =>
-        {'name': name, 'email': mail, 'hash': _hash(mail, pw), 'role': role};
+    Json user(String name, String mail, String pw, String role) => {
+      'name': name,
+      'email': mail,
+      'hash': _hash(mail, pw),
+      'role': role,
+    };
     users = [
-      user('Admin', 'admin@medicore.app', 'admin123', 'admin'),
-      user('Dr. Karim Benali', 'doctor@medicore.app', 'doctor123', 'doctor'),
-      user('Sara Haddad', 'assistant@medicore.app', 'assist123', 'assistant'),
+      user('Admin', 'admin@foukamedix.app', 'admin123', 'admin'),
+      user('Dr. Karim Benali', 'doctor@foukamedix.app', 'doctor123', 'doctor'),
+      user('Sara Haddad', 'assistant@foukamedix.app', 'assist123', 'assistant'),
     ];
     final now = DateTime.now();
     final year = now.year;
@@ -304,7 +342,8 @@ class AppStore extends ChangeNotifier {
           {
             'date': isoDate(now.subtract(const Duration(days: 2))),
             'reason': 'Difficulté respiratoire',
-            'report': 'Crise d\'asthme modérée. Traitement par bronchodilatateur.',
+            'report':
+                'Crise d\'asthme modérée. Traitement par bronchodilatateur.',
             'exams': 'Saturation O2 : 94 %. Radio thorax normale.',
             'author': 'Dr. Karim Benali',
           },
@@ -339,8 +378,13 @@ class AppStore extends ChangeNotifier {
       },
     ];
     _counter = 2;
-    final rdv = DateTime(now.year, now.month, now.day, 10, 30)
-        .add(const Duration(days: 3));
+    final rdv = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      10,
+      30,
+    ).add(const Duration(days: 3));
     appointments = [
       {
         'id': 'a1',

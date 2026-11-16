@@ -3,16 +3,17 @@ import 'package:material_ui/material_ui.dart';
 
 import 'screens/auth.dart';
 import 'store.dart';
+import 'widgets.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting();
   await store.load();
-  runApp(const MediCoreApp());
+  runApp(const FoukaMedixApp());
 }
 
-class MediCoreApp extends StatelessWidget {
-  const MediCoreApp({super.key});
+class FoukaMedixApp extends StatelessWidget {
+  const FoukaMedixApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,15 +21,25 @@ class MediCoreApp extends StatelessWidget {
     return ListenableBuilder(
       listenable: store,
       builder: (context, _) => MaterialApp(
-        title: 'MediCore HMS',
+        title: 'FOUKA Medix',
         debugShowCheckedModeBanner: false,
         locale: Locale(store.lang),
         supportedLocales: const [Locale('fr'), Locale('en')],
         localizationsDelegates: GlobalMaterialLocalizations.delegates,
         theme: ThemeData(
-          colorSchemeSeed: Colors.deepPurple,
-          inputDecorationTheme:
-              const InputDecorationTheme(border: OutlineInputBorder()),
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: brandBlue,
+            primary: brandBlue,
+            secondary: brandRed,
+            error: brandRed,
+          ),
+          appBarTheme: const AppBarThemeData(
+            backgroundColor: brandBlue,
+            foregroundColor: Colors.white,
+          ),
+          inputDecorationTheme: const InputDecorationTheme(
+            border: OutlineInputBorder(),
+          ),
         ),
         home: const LoginScreen(),
       ),

@@ -39,8 +39,12 @@ class _PatientListScreenState extends State<PatientListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final results = store.searchPatients(_query,
-        bloodType: _bloodType, department: _department, status: _status);
+    final results = store.searchPatients(
+      _query,
+      bloodType: _bloodType,
+      department: _department,
+      status: _status,
+    );
     return Scaffold(
       appBar: AppBar(
         title: Text(context.tr('patients.title')),
@@ -52,8 +56,10 @@ class _PatientListScreenState extends State<PatientListScreen> {
           onLeft: () => Navigator.pop(context),
           rightLabel: context.tr('dash.addPatient'),
           onRight: () async {
-            await Navigator.push(context,
-                MaterialPageRoute(builder: (_) => const PatientFormScreen()));
+            await Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const PatientFormScreen()),
+            );
             setState(() {});
           },
         ),
@@ -91,8 +97,10 @@ class _PatientListScreenState extends State<PatientListScreen> {
             onChanged: (v) => setState(() => _status = v),
           ),
           gap,
-          Text('${results.length} ${context.tr('patients.count')}',
-              style: Theme.of(context).textTheme.bodySmall),
+          Text(
+            '${results.length} ${context.tr('patients.count')}',
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
           if (results.isEmpty)
             Padding(
               padding: const EdgeInsets.only(top: 12),
@@ -102,21 +110,28 @@ class _PatientListScreenState extends State<PatientListScreen> {
             Card(
               child: ListTile(
                 leading: CircleAvatar(
-                    child: Text((p['lastName'] as String).isEmpty
+                  child: Text(
+                    (p['lastName'] as String).isEmpty
                         ? '?'
-                        : (p['lastName'] as String)[0].toUpperCase())),
+                        : (p['lastName'] as String)[0].toUpperCase(),
+                  ),
+                ),
                 title: Text(store.patientName(p)),
-                subtitle: Text([
-                  p['recordNo'],
-                  context.date(p['birthDate']),
-                  if (p['status'] != null) context.opt(p['status']),
-                ].where((s) => s != '').join(' · ')),
+                subtitle: Text(
+                  [
+                    p['recordNo'],
+                    context.date(p['birthDate']),
+                    if (p['status'] != null) context.opt(p['status']),
+                  ].where((s) => s != '').join(' · '),
+                ),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () async {
                   await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (_) => PatientDetailScreen(id: p['id'])));
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => PatientDetailScreen(id: p['id']),
+                    ),
+                  );
                   setState(() {});
                 },
               ),
@@ -192,8 +207,12 @@ class _PatientFormScreenState extends State<PatientFormScreen> {
     Navigator.pop(context);
   }
 
-  Widget _field(String key,
-      {bool required = false, TextInputType? keyboard, int maxLines = 1}) {
+  Widget _field(
+    String key, {
+    bool required = false,
+    TextInputType? keyboard,
+    int maxLines = 1,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 14),
       child: TextFormField(
@@ -202,8 +221,9 @@ class _PatientFormScreenState extends State<PatientFormScreen> {
         keyboardType: keyboard,
         maxLines: maxLines,
         validator: required
-            ? (v) =>
-                (v == null || v.trim().isEmpty) ? context.tr('required') : null
+            ? (v) => (v == null || v.trim().isEmpty)
+                  ? context.tr('required')
+                  : null
             : null,
         decoration: InputDecoration(labelText: context.tr(key)),
       ),
@@ -253,7 +273,8 @@ class _PatientFormScreenState extends State<PatientFormScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            context.tr(widget.patient == null ? 'patient.new' : 'patient.edit')),
+          context.tr(widget.patient == null ? 'patient.new' : 'patient.edit'),
+        ),
         actions: const [LangButton()],
       ),
       body: Form(
@@ -399,20 +420,18 @@ class _PatientDetailScreenState extends State<PatientDetailScreen> {
   }
 
   Widget _row(String label, String? value) => Padding(
-        padding: const EdgeInsets.only(bottom: 8),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: 150,
-              child: Text(label,
-                  style: Theme.of(context).textTheme.bodySmall),
-            ),
-            Expanded(
-                child: Text((value == null || value.isEmpty) ? '—' : value)),
-          ],
+    padding: const EdgeInsets.only(bottom: 8),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 150,
+          child: Text(label, style: Theme.of(context).textTheme.bodySmall),
         ),
-      );
+        Expanded(child: Text((value == null || value.isEmpty) ? '—' : value)),
+      ],
+    ),
+  );
 
   String _list(dynamic values) =>
       ((values ?? []) as List).map((v) => context.opt(v)).join(', ');
@@ -443,15 +462,17 @@ class _PatientDetailScreenState extends State<PatientDetailScreen> {
                 gap,
                 TextField(
                   controller: reason,
-                  decoration:
-                      InputDecoration(labelText: c.tr('consult.reason')),
+                  decoration: InputDecoration(
+                    labelText: c.tr('consult.reason'),
+                  ),
                 ),
                 gap,
                 TextField(
                   controller: report,
                   maxLines: 3,
-                  decoration:
-                      InputDecoration(labelText: c.tr('consult.report')),
+                  decoration: InputDecoration(
+                    labelText: c.tr('consult.report'),
+                  ),
                 ),
                 gap,
                 TextField(
@@ -464,11 +485,13 @@ class _PatientDetailScreenState extends State<PatientDetailScreen> {
           ),
           actions: [
             TextButton(
-                onPressed: () => Navigator.pop(c, false),
-                child: Text(c.tr('cancel'))),
+              onPressed: () => Navigator.pop(c, false),
+              child: Text(c.tr('cancel')),
+            ),
             FilledButton(
-                onPressed: () => Navigator.pop(c, true),
-                child: Text(c.tr('save'))),
+              onPressed: () => Navigator.pop(c, true),
+              child: Text(c.tr('save')),
+            ),
           ],
         ),
       ),
@@ -502,9 +525,11 @@ class _PatientDetailScreenState extends State<PatientDetailScreen> {
               icon: const Icon(Icons.edit),
               onPressed: () async {
                 await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => PatientFormScreen(patient: p)));
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => PatientFormScreen(patient: p),
+                  ),
+                );
                 setState(() {});
               },
             ),
@@ -513,7 +538,10 @@ class _PatientDetailScreenState extends State<PatientDetailScreen> {
                 tooltip: context.tr('delete'),
                 icon: const Icon(Icons.delete),
                 onPressed: () async {
-                  if (!await confirm(context, context.tr('patient.deleteAsk'))) {
+                  if (!await confirm(
+                    context,
+                    context.tr('patient.deleteAsk'),
+                  )) {
                     return;
                   }
                   store.deletePatient(p);
@@ -535,48 +563,62 @@ class _PatientDetailScreenState extends State<PatientDetailScreen> {
         body: TabBarView(
           children: [
             // --- Record ---
-            PageBody(children: [
-              SectionTitle(context.tr('sec.personal')),
-              _row(context.tr('recordNo'), p['recordNo']),
-              _row(context.tr('lastName'), p['lastName']),
-              _row(context.tr('firstName'), p['firstName']),
-              _row(
+            PageBody(
+              children: [
+                SectionTitle(context.tr('sec.personal')),
+                _row(context.tr('recordNo'), p['recordNo']),
+                _row(context.tr('lastName'), p['lastName']),
+                _row(context.tr('firstName'), p['firstName']),
+                _row(
                   context.tr('birthDate'),
                   age == null
                       ? null
                       : '${context.date(p['birthDate'])} '
-                          '($age ${context.tr('years')})'),
-              _row(context.tr('gender'),
-                  p['gender'] == null ? null : context.opt(p['gender'])),
-              _row(context.tr('phone'), p['phone']),
-              _row(context.tr('address'), p['address']),
-              _row(context.tr('firstConsultation'),
-                  context.date(p['firstConsultation'])),
-              SectionTitle(context.tr('sec.medical')),
-              _row(context.tr('bloodType'), p['bloodType']),
-              _row(context.tr('allergies'), _list(p['allergies'])),
-              _row(context.tr('chronic'), _list(p['chronic'])),
-              _row(context.tr('medication'), p['medication']),
-              SectionTitle(context.tr('sec.admission')),
-              _row(context.tr('admissionReason'), p['admissionReason']),
-              _row(context.tr('admissionDate'),
-                  context.date(p['admissionDate'])),
-              _row(
+                            '($age ${context.tr('years')})',
+                ),
+                _row(
+                  context.tr('gender'),
+                  p['gender'] == null ? null : context.opt(p['gender']),
+                ),
+                _row(context.tr('phone'), p['phone']),
+                _row(context.tr('address'), p['address']),
+                _row(
+                  context.tr('firstConsultation'),
+                  context.date(p['firstConsultation']),
+                ),
+                SectionTitle(context.tr('sec.medical')),
+                _row(context.tr('bloodType'), p['bloodType']),
+                _row(context.tr('allergies'), _list(p['allergies'])),
+                _row(context.tr('chronic'), _list(p['chronic'])),
+                _row(context.tr('medication'), p['medication']),
+                SectionTitle(context.tr('sec.admission')),
+                _row(context.tr('admissionReason'), p['admissionReason']),
+                _row(
+                  context.tr('admissionDate'),
+                  context.date(p['admissionDate']),
+                ),
+                _row(
                   context.tr('admissionType'),
                   p['admissionType'] == null
                       ? null
-                      : context.opt(p['admissionType'])),
-              _row(context.tr('department'),
-                  p['department'] == null ? null : context.opt(p['department'])),
-              _row(context.tr('doctor'), p['doctor']),
-              _row(context.tr('status'),
-                  p['status'] == null ? null : context.opt(p['status'])),
-              SectionTitle(context.tr('sec.vitals')),
-              _row(context.tr('height'), p['height']),
-              _row(context.tr('weight'), p['weight']),
-              _row(context.tr('bloodPressure'), p['bloodPressure']),
-              _row(context.tr('heartRate'), p['heartRate']),
-            ]),
+                      : context.opt(p['admissionType']),
+                ),
+                _row(
+                  context.tr('department'),
+                  p['department'] == null ? null : context.opt(p['department']),
+                ),
+                _row(context.tr('doctor'), p['doctor']),
+                _row(
+                  context.tr('status'),
+                  p['status'] == null ? null : context.opt(p['status']),
+                ),
+                SectionTitle(context.tr('sec.vitals')),
+                _row(context.tr('height'), p['height']),
+                _row(context.tr('weight'), p['weight']),
+                _row(context.tr('bloodPressure'), p['bloodPressure']),
+                _row(context.tr('heartRate'), p['heartRate']),
+              ],
+            ),
 
             // --- Consultation history ---
             PageBody(
@@ -595,8 +637,9 @@ class _PatientDetailScreenState extends State<PatientDetailScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                              '${context.date(c['date'])} — ${c['reason'] ?? ''}',
-                              style: Theme.of(context).textTheme.titleSmall),
+                            '${context.date(c['date'])} — ${c['reason'] ?? ''}',
+                            style: Theme.of(context).textTheme.titleSmall,
+                          ),
                           const SizedBox(height: 8),
                           _row(context.tr('consult.report'), c['report']),
                           _row(context.tr('consult.exams'), c['exams']),
@@ -610,7 +653,9 @@ class _PatientDetailScreenState extends State<PatientDetailScreen> {
 
             // --- Appointments ---
             AppointmentList(
-                patientId: widget.id, onChanged: () => setState(() {})),
+              patientId: widget.id,
+              onChanged: () => setState(() {}),
+            ),
 
             // --- Documents ---
             PageBody(
@@ -629,9 +674,11 @@ class _PatientDetailScreenState extends State<PatientDetailScreen> {
                 for (final f in files)
                   ListTile(
                     contentPadding: EdgeInsets.zero,
-                    leading: Icon(f.toString().toLowerCase().endsWith('.pdf')
-                        ? Icons.picture_as_pdf
-                        : Icons.image),
+                    leading: Icon(
+                      f.toString().toLowerCase().endsWith('.pdf')
+                          ? Icons.picture_as_pdf
+                          : Icons.image,
+                    ),
                     title: Text('$f'),
                   ),
               ],

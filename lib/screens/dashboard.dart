@@ -11,29 +11,32 @@ import 'patients.dart';
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
 
-  void _open(BuildContext context, Widget screen) => Navigator.push(
-      context, MaterialPageRoute(builder: (_) => screen));
+  void _open(BuildContext context, Widget screen) =>
+      Navigator.push(context, MaterialPageRoute(builder: (_) => screen));
 
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now().toIso8601String();
-    final admitted =
-        store.patients.where((p) => p['status'] == 'Admitted').length;
+    final admitted = store.patients
+        .where((p) => p['status'] == 'Admitted')
+        .length;
     final upcoming = store.appointments
-        .where((a) =>
-            a['status'] == 'scheduled' &&
-            (a['dateTime'] as String).compareTo(now) > 0)
+        .where(
+          (a) =>
+              a['status'] == 'scheduled' &&
+              (a['dateTime'] as String).compareTo(now) > 0,
+        )
         .length;
 
     Widget button(String key, IconData icon, VoidCallback onTap) => Padding(
-          padding: const EdgeInsets.only(bottom: 12),
-          child: FilledButton.icon(
-            key: Key(key),
-            onPressed: onTap,
-            icon: Icon(icon),
-            label: Text(context.tr(key)),
-          ),
-        );
+      padding: const EdgeInsets.only(bottom: 12),
+      child: FilledButton.icon(
+        key: Key(key),
+        onPressed: onTap,
+        icon: Icon(icon),
+        label: Text(context.tr(key)),
+      ),
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -42,8 +45,10 @@ class DashboardScreen extends StatelessWidget {
       ),
       body: PageBody(
         children: [
-          Text(context.tr('dash.title'),
-              style: Theme.of(context).textTheme.titleLarge),
+          Text(
+            context.tr('dash.title'),
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
           const SizedBox(height: 6),
           Text(context.tr('dash.subtitle')),
           const SizedBox(height: 4),
@@ -61,17 +66,32 @@ class DashboardScreen extends StatelessWidget {
             ],
           ),
           gap,
-          button('dash.patients', Icons.folder_shared,
-              () => _open(context, const PatientListScreen())),
-          button('dash.addPatient', Icons.person_add,
-              () => _open(context, const PatientFormScreen())),
-          button('dash.appointments', Icons.event,
-              () => _open(context, const AppointmentsScreen())),
+          button(
+            'dash.patients',
+            Icons.folder_shared,
+            () => _open(context, const PatientListScreen()),
+          ),
+          button(
+            'dash.addPatient',
+            Icons.person_add,
+            () => _open(context, const PatientFormScreen()),
+          ),
+          button(
+            'dash.appointments',
+            Icons.event,
+            () => _open(context, const AppointmentsScreen()),
+          ),
           if (store.canAdminister) ...[
-            button('dash.audit', Icons.history,
-                () => _open(context, const AuditScreen())),
-            button('dash.backup', Icons.backup,
-                () => _open(context, const BackupScreen())),
+            button(
+              'dash.audit',
+              Icons.history,
+              () => _open(context, const AuditScreen()),
+            ),
+            button(
+              'dash.backup',
+              Icons.backup,
+              () => _open(context, const BackupScreen()),
+            ),
           ],
           button('dash.logout', Icons.logout, () {
             store.logout();
@@ -101,9 +121,11 @@ class _Stat extends StatelessWidget {
           child: Column(
             children: [
               Text('$value', style: Theme.of(context).textTheme.headlineSmall),
-              Text(label,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodySmall),
+              Text(
+                label,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
             ],
           ),
         ),
@@ -132,12 +154,16 @@ class AuditScreen extends StatelessWidget {
               dense: true,
               contentPadding: EdgeInsets.zero,
               leading: const Icon(Icons.history),
-              title: Text([
-                context.tr('act.${e['action']}'),
-                if ((e['detail'] ?? '') != '') e['detail'],
-              ].join(' : ')),
-              subtitle: Text('${context.dateTime(e['time'])} — ${e['user']}'
-                  '${e['role'] == '' ? '' : ' (${context.tr('role.${e['role']}')})'}'),
+              title: Text(
+                [
+                  context.tr('act.${e['action']}'),
+                  if ((e['detail'] ?? '') != '') e['detail'],
+                ].join(' : '),
+              ),
+              subtitle: Text(
+                '${context.dateTime(e['time'])} — ${e['user']}'
+                '${e['role'] == '' ? '' : ' (${context.tr('role.${e['role']}')})'}',
+              ),
             ),
         ],
       ),
@@ -172,7 +198,8 @@ class _BackupScreenState extends State<BackupScreen> {
             label: Text(context.tr('backup.copy')),
             onPressed: () async {
               await Clipboard.setData(
-                  ClipboardData(text: store.exportBackup()));
+                ClipboardData(text: store.exportBackup()),
+              );
               if (context.mounted) toast(context, context.tr('backup.copied'));
             },
           ),
@@ -192,8 +219,10 @@ class _BackupScreenState extends State<BackupScreen> {
               }
               final ok = store.restoreBackup(_input.text);
               if (context.mounted) {
-                toast(context,
-                    context.tr(ok ? 'backup.restored' : 'backup.invalid'));
+                toast(
+                  context,
+                  context.tr(ok ? 'backup.restored' : 'backup.invalid'),
+                );
               }
             },
           ),

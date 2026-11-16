@@ -24,13 +24,13 @@ jobs:
       - run: flutter pub get
       - run: flutter test
       - run: flutter build apk --release
-      - run: cp build/app/outputs/flutter-apk/app-release.apk medicore-hms.apk
+      - run: cp build/app/outputs/flutter-apk/app-release.apk fouka-medix.apk
       - uses: softprops/action-gh-release@v2
         with:
           tag_name: demo
-          name: MediCore HMS (demo)
-          body: Android APK of the MediCore HMS demo app.
-          files: medicore-hms.apk
+          name: FOUKA Medix (demo)
+          body: Android APK of the FOUKA Medix demo app.
+          files: fouka-medix.apk
           target_commitish: ${{ github.sha }}
 
   web:

@@ -36,13 +36,18 @@ class _AppointmentListState extends State<AppointmentList> {
       toast(context, context.tr('appt.noPatients'));
       return;
     }
-    final initial = DateTime.tryParse(existing?['dateTime'] ?? '') ??
+    final initial =
+        DateTime.tryParse(existing?['dateTime'] ?? '') ??
         DateTime.now().add(const Duration(days: 1));
     String? patientId =
-        existing?['patientId'] ?? widget.patientId ?? store.patients.first['id'];
+        existing?['patientId'] ??
+        widget.patientId ??
+        store.patients.first['id'];
     var date = isoDate(initial);
-    var time = TimeOfDay(hour: existing == null ? 9 : initial.hour,
-        minute: existing == null ? 0 : initial.minute);
+    var time = TimeOfDay(
+      hour: existing == null ? 9 : initial.hour,
+      minute: existing == null ? 0 : initial.minute,
+    );
     final reason = TextEditingController(text: existing?['reason'] ?? '');
 
     final ok = await showDialog<bool>(
@@ -81,13 +86,17 @@ class _AppointmentListState extends State<AppointmentList> {
                   child: Row(
                     children: [
                       Expanded(
-                        child: Text('${time.hour.toString().padLeft(2, '0')}:'
-                            '${time.minute.toString().padLeft(2, '0')}'),
+                        child: Text(
+                          '${time.hour.toString().padLeft(2, '0')}:'
+                          '${time.minute.toString().padLeft(2, '0')}',
+                        ),
                       ),
                       FilledButton(
                         onPressed: () async {
                           final t = await showTimePicker(
-                              context: c, initialTime: time);
+                            context: c,
+                            initialTime: time,
+                          );
                           if (t != null) setLocal(() => time = t);
                         },
                         child: Text(c.tr('pick')),
@@ -105,11 +114,13 @@ class _AppointmentListState extends State<AppointmentList> {
           ),
           actions: [
             TextButton(
-                onPressed: () => Navigator.pop(c, false),
-                child: Text(c.tr('cancel'))),
+              onPressed: () => Navigator.pop(c, false),
+              child: Text(c.tr('cancel')),
+            ),
             FilledButton(
-                onPressed: () => Navigator.pop(c, true),
-                child: Text(c.tr('save'))),
+              onPressed: () => Navigator.pop(c, true),
+              child: Text(c.tr('save')),
+            ),
           ],
         ),
       ),
@@ -119,8 +130,13 @@ class _AppointmentListState extends State<AppointmentList> {
     store.saveAppointment({
       ...?existing,
       'patientId': patientId,
-      'dateTime': DateTime(d.year, d.month, d.day, time.hour, time.minute)
-          .toIso8601String(),
+      'dateTime': DateTime(
+        d.year,
+        d.month,
+        d.day,
+        time.hour,
+        time.minute,
+      ).toIso8601String(),
       'reason': reason.text.trim(),
     });
     _refresh();
@@ -158,11 +174,13 @@ class _AppointmentListState extends State<AppointmentList> {
       child: ListTile(
         leading: Icon(cancelled ? Icons.event_busy : Icons.event_available),
         title: Text(context.dateTime(a['dateTime']), style: style),
-        subtitle: Text([
-          if (widget.patientId == null && p != null) store.patientName(p),
-          if ((a['reason'] ?? '') != '') a['reason'],
-          context.tr(cancelled ? 'appt.cancelled' : 'appt.scheduled'),
-        ].join(' · ')),
+        subtitle: Text(
+          [
+            if (widget.patientId == null && p != null) store.patientName(p),
+            if ((a['reason'] ?? '') != '') a['reason'],
+            context.tr(cancelled ? 'appt.cancelled' : 'appt.scheduled'),
+          ].join(' · '),
+        ),
         trailing: cancelled
             ? null
             : Row(
@@ -178,7 +196,9 @@ class _AppointmentListState extends State<AppointmentList> {
                     icon: const Icon(Icons.cancel_outlined),
                     onPressed: () async {
                       if (!await confirm(
-                          context, context.tr('appt.cancelAsk'))) {
+                        context,
+                        context.tr('appt.cancelAsk'),
+                      )) {
                         return;
                       }
                       store.cancelAppointment(a);
